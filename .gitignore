@@ -1,3 +1,5 @@
+*~
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
@@ -118,6 +120,10 @@ ipython_config.py
 .pdm-python
 .pdm-build/
 
+AGENTS.md
+DEVELOPMENT.md
+agent_docs/
+
 # pixi
 #   Similar to Pipfile.lock, it is generally recommended to include pixi.lock in version control.
 # pixi.lock
@@ -218,3 +224,9 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local browser verification output
+tests/artifacts/
+
+# Optional browser-test dependencies
+/node_modules/

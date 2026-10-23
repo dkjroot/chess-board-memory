@@ -1,0 +1,39 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Chess Board Memory</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/app.js" defer></script>
+</head>
+<body>
+  <header><h1><a class="brand" href="/">Chess Board Memory</a></h1><button id="theme-toggle" type="button">Dark mode</button></header>
+  <main>
+    <div class="workspace">
+      <aside class="card settings">
+        <h2>Settings</h2>
+        <form id="settings">
+          <label for="mode">Practice mode</label><select id="mode"><option value="progressive">Progressive training</option><option value="fixed">Fixed board size</option></select>
+          <label for="size">Board size</label><select id="size"></select>
+          <label for="palette">Piece palette</label><select id="palette"><option value="puzzle">Puzzle pieces only</option><option value="all">All pieces · both colours</option></select>
+          <div class="two-fields"><div><label for="count">Pieces</label><input id="count" type="number" min="1" max="9" value="3" required></div><div><label for="seconds">Study seconds</label><input id="seconds" type="number" min="2" max="60" value="8" required></div></div>
+          <p id="mode-help" class="muted">The board grows after three perfect rounds in a row.</p>
+          <button id="start" class="primary" type="submit">Start a round <span aria-hidden="true">→</span></button>
+        </form>
+        <div class="progress"><div><span id="rounds">0</span><small>rounds</small></div><div><span id="perfects">0</span><small>perfect</small></div><div><span id="streak">0 / 3</span><small>current streak</small></div></div>
+        <details><summary>How to practise</summary><p>Study the position, then rebuild it on the empty board. Drag pieces from the tray, or select a piece and tap a square. Use Tab and Enter for keyboard placement.</p><p>Select a placed piece to move it. Use “Return selected” or Delete to put it back in the tray. Pieces are identified by colour and type.</p><p>These are memory patterns, so positions do not have to be legal chess positions.</p></details>
+      </aside>
+      <section class="card play" aria-label="Memory exercise">
+        <div class="play-heading"><div><p class="eyebrow" id="phase">READY</p><h2 id="instruction">Position recall</h2></div><span id="badge" class="badge">3 × 3</span></div>
+        <div class="timer-track"><div id="timer-bar"></div></div>
+        <div class="board-wrap"><div id="board" class="board" role="group" aria-label="Chess board"></div></div>
+        <p id="status" role="status" aria-live="polite">Choose your settings, then start a round.</p>
+        <div id="tray" class="tray" role="group" aria-label="Pieces to place"></div>
+        <div class="actions"><button id="hide" hidden>I'm ready — hide the pieces</button><button id="remove" hidden>Return selected</button><button id="clear" hidden>Clear board</button><button id="check" class="primary" hidden>Check my board</button><button id="compare" hidden>Show original</button><button id="next" class="primary" hidden>Next round →</button></div>
+      </section>
+    </div>
+  </main>
+</body>
+</html>

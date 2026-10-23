@@ -1,0 +1,7 @@
+Chess Board Memory uses Python's standard library at runtime and native browser
+HTML, CSS and JavaScript APIs. No third-party packages, artwork, fonts or scripts
+are bundled. Chess piece silhouettes are local SVG shapes defined in this project.
+Python, browsers and system UI fonts retain their respective licenses.
+
+Optional browser tests use Playwright, installed separately by the developer.
+Playwright is not bundled or required to run the application.
