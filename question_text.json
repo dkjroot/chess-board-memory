@@ -1,0 +1,66 @@
+{
+  "_help": {
+    "editing": "Edit name, description, header, subhead and marker labels. Keep question IDs and marker IDs unchanged. Changes apply to new rounds without restarting the server. Use double quotes and no trailing commas.",
+    "placeholders": {
+      "attacker": "White pieces, Black pieces, White's bishop, Black's knights, etc.",
+      "attacker_colour": "White or Black",
+      "victim_colour": "Black or White: the other side",
+      "victim_lower": "black or white",
+      "piece": "king, queen, rook, bishop, knight or pawn (piece-type questions only)",
+      "pieces": "kings, queens, rooks, bishops, knights or pawns (piece-type questions only)",
+      "piece_count": "Number of attacking pieces of the chosen type (piece-type questions only)"
+    }
+  },
+  "memory": {
+    "name": "Remember the position",
+    "description": "Put every piece back on the square where it was shown.",
+    "header": "Rebuild the position",
+    "subhead": "",
+    "markers": {}
+  },
+  "squares_side": {
+    "name": "Squares threatened by one side",
+    "description": "Mark empty squares and opposing pieces attacked by the chosen colour. Friendly-occupied defended squares do not count.",
+    "header": "Mark squares threatened by {attacker_colour} pieces.",
+    "subhead": "Mark empty squares and {victim_lower} pieces under attack. Don't mark the attacker's own pieces.",
+    "markers": {"x": "Red X"}
+  },
+  "squares_piece": {
+    "name": "Squares threatened by a piece type",
+    "description": "Mark squares attacked by all pieces of the chosen colour and type, such as both Black knights. Friendly-occupied defended squares do not count.",
+    "header": "Mark squares threatened by {attacker}.",
+    "subhead": "Mark empty squares and {victim_lower} pieces under attack. Don't mark the attacker's own pieces.",
+    "markers": {"x": "Red X"}
+  },
+  "pieces_side": {
+    "name": "Pieces threatened by one side",
+    "description": "Mark only opposing occupied squares attacked by any piece of the chosen colour.",
+    "header": "Mark {victim_colour} pieces threatened by {attacker_colour}.",
+    "subhead": "Only mark squares that held a {victim_lower} piece under attack.",
+    "markers": {"x": "Red X"}
+  },
+  "pieces_piece": {
+    "name": "Pieces threatened by a piece type",
+    "description": "Mark opposing pieces attacked by all pieces of the chosen colour and type, such as Black's bishops.",
+    "header": "Mark {victim_colour} pieces threatened by {attacker}.",
+    "subhead": "Only mark squares that held a {victim_lower} piece under attack.",
+    "markers": {"x": "Red X"}
+  },
+  "pieces_all": {
+    "name": "Every threatened piece",
+    "description": "Mark attacked pieces on either side, using the same red X for both sides. Empty squares and defended friendly pieces do not count.",
+    "header": "Mark every piece threatened by either side.",
+    "subhead": "Mark White pieces attacked by Black and Black pieces attacked by White.",
+    "markers": {"x": "Red X"}
+  },
+  "pieces_both": {
+    "name": "Threatened pieces, marked by attacker",
+    "description": "Mark Black victims attacked by White with a red X, and White victims attacked by Black with a blue circle.",
+    "header": "Mark pieces threatened by White (red X) or Black (blue circle).",
+    "subhead": "Red X on Black pieces attacked by White; blue circle on White pieces attacked by Black.",
+    "markers": {
+      "xw": "Threatened by White · red X",
+      "xb": "Threatened by Black · blue circle"
+    }
+  }
+}

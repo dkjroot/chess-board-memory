@@ -56,6 +56,7 @@ def main() -> int:
     artifacts.mkdir(parents=True)
     env = os.environ.copy()
     env["PYTHONIOENCODING"] = "utf-8"
+    env["CHESS_MEMORY_GENERATION_LOG"] = str(artifacts / "generation.jsonl")
     checks = []
     unit = execute("Python tests", [sys.executable, "-m", "unittest", "discover", "-s", "tests", "-v"],
                    artifacts / "python.log", args.timeout, env)
@@ -73,6 +74,8 @@ def main() -> int:
     browser_log = artifacts / "browser.log"
     try:
         from app import Handler, ThreadingHTTPServer
+        import generation_diagnostics
+        generation_diagnostics.LOG_PATH = artifacts / "generation.jsonl"
 
         with server_log.open("w", encoding="utf-8") as output:
             class QuietHandler(Handler):

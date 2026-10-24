@@ -45,7 +45,7 @@ class Handler(BaseHTTPRequestHandler):
         self.reply(200, (ROOT / "static" / filename).read_bytes(), mime + "; charset=utf-8")
 
     def do_POST(self) -> None:
-        if self.path not in ("/api/start", "/api/check"):
+        if self.path not in ("/api/start", "/api/reveal", "/api/check"):
             self.json_reply(404, {"error": "Endpoint not found."})
             return
         origin = self.headers.get("Origin")
@@ -70,7 +70,12 @@ class Handler(BaseHTTPRequestHandler):
                     SESSIONS[sid] = (Practice(), now)
                 practice = SESSIONS[sid][0]
                 SESSIONS[sid] = (practice, now)
-                result = practice.start(data) if self.path == "/api/start" else practice.check(data.get("id"), data.get("placement"))
+                if self.path == "/api/start":
+                    result = practice.start(data)
+                elif self.path == "/api/reveal":
+                    result = practice.reveal(data.get("id"))
+                else:
+                    result = practice.check(data.get("id"), data.get("placement"))
             self.json_reply(200, result, sid)
         except (ValueError, TypeError, UnicodeDecodeError) as exc:
             self.json_reply(400, {"error": str(exc)})

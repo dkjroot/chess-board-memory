@@ -61,12 +61,15 @@ press Ctrl+C in the terminal to stop it.
 2. Click **Start a round** and have a look at where everything is. The pieces
    disappear when the time runs out. If you're ready sooner, you can hide them
    yourself.
-3. Put the pieces back where you remember them. Drag them from the tray onto the
-   board, or select a piece and click or tap its square. There's no time limit
-   for this part.
-4. Click **Check my board**. You can check an unfinished board too. A tick means
+3. Answer the question from memory. In a memory round, put the pieces back where
+   you remember them. Drag them from the tray, or select a piece and click or tap
+   its square. In a threats round, mark the threats with red Xs instead.
+   There's no time limit for this part.
+4. Click **Check my board** or **Check my marks**. You can check an unfinished answer too. A tick means
    you got that square right; a cross means something was wrong or missing.
-   **Show original** lets you compare your answer with the position you saw.
+   **Show original** lets you compare a memory answer with the position you saw.
+   For threats, **Show correct threats** brings back the position with the right
+   squares marked.
 5. Click **Next round** to have another go.
 
 The board can be anything from **3 × 3 to 8 × 8**, with **1–32 pieces**, as long
@@ -82,14 +85,22 @@ queen each.
 
 ### Choosing the difficulty
 
-With **Progressive training**, three perfect rounds in a row take you up to the
+There are six practice choices:
+
+- **Memory fixed board** and **Memory progressive** ask you to rebuild the position.
+- **Threats fixed** and **Threats progressive** ask you to remember attacks.
+- **Random questions fixed** and **Random questions progressive** mix both sorts
+  of question. Question types are shuffled, and a type is skipped if it can't
+  produce a useful puzzle with your current settings.
+
+With a **progressive** choice, three perfect rounds in a row take you up to the
 next board size, all the way to 8 × 8. Get one wrong and the streak starts again.
 Changing the board size or practice mode resets it too. You still choose the
 number of pieces and how long you get to look at them.
 
-If you'd rather stay on the same board, choose **Fixed board size**.
+If you'd rather stay on the same board, choose one of the **fixed** options.
 
-The **Piece palette** setting gives you another choice:
+For memory questions, the **Piece palette** setting gives you another choice:
 
 - **Puzzle pieces only** gives you just the pieces that were in the puzzle.
 - **All pieces · both colours** gives you all six types in white and black.
@@ -114,6 +125,63 @@ start your answer again.
 You can use the keyboard too: Tab to a piece and press Enter or Space to select
 it, then do the same on its square. Delete returns a selected piece to the tray;
 Escape deselects it.
+
+### Remembering threats
+
+You'll be asked about either the squares under attack or the opposing pieces
+under attack. The question might name all Black or White pieces, or a particular
+type, such as Black's bishops. If there are two bishops of that colour, include
+both of them.
+
+Remember the whole board first. You won't see the question until the pieces
+have disappeared, so you have to picture the position and work out the answer
+in your head. Then drag the red X onto the squares, or just tap them. The X in
+the tray can be used as many times as you need. Tap with the same symbol to
+remove a mark, or use **Clear board** to start again. With the keyboard, Tab to a
+tool to choose its symbol, then Tab to a square and press Enter or Space.
+
+For a **squares** question, mark empty squares under attack and squares holding
+an opposing piece under attack. Don't mark squares occupied by the attacker's
+own pieces: those are defended, rather than threatened. Bishops, rooks and queens
+stop at the first piece in their way. Include that square if it's an opposing
+piece, but nothing beyond it. Knights can jump.
+White pawns attack diagonally towards higher ranks; Black towards lower ranks.
+They don't attack straight ahead. Kings attack the adjoining squares. We're
+counting attacks, so a pinned piece still counts, even if it couldn't legally
+move without exposing its king.
+
+For a **pieces** question, only mark squares that held an opposing piece under
+attack. Empty squares and defended friendly pieces don't count for that question.
+Some questions ask for every threatened piece, on both sides. Others ask you to
+show who's doing the threatening: use a **red X for threats by White** (on Black
+pieces), and a **blue circle for threats by Black** (on White pieces). The tools
+have labels to help keep that straight. Select the other symbol to change a mark.
+
+Every puzzle has at least one answer to find. If a position has no answers to
+the question, the app tries a different position before showing it to you.
+
+### Changing the question wording
+
+If you'd like the questions phrased differently, open
+[question_text.json](question_text.json) in a text editor. Each question has a
+`name` and `description` to explain what it does, followed by the two bits of
+text you'll actually see: `header` and `subhead`. Change those to suit yourself.
+You can change the labels under the symbols in `markers` too.
+
+Some questions have placeholders such as `{attacker_colour}`, `{victim_colour}`
+or `{attacker}`. Leave those in the text wherever you want the relevant colour
+or piece name to appear. There's a list of available placeholders at the top
+of the file. For example:
+
+```json
+"header": "Which {victim_colour} pieces can {attacker_colour} attack?",
+"subhead": "Mark the squares where those pieces were."
+```
+
+Keep the question IDs and marker IDs as they are, use double quotes, and don't
+put a comma after the last item in an object. Save the file and start another
+round; there's no need to restart the app. A round you've already started keeps
+its original wording.
 
 ### Light and dark mode
 

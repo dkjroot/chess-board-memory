@@ -230,3 +230,6 @@ tests/artifacts/
 
 # Optional browser-test dependencies
 /node_modules/
+
+# Local puzzle-generation diagnostics
+/logs/
