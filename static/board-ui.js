@@ -76,10 +76,11 @@ function pieceElement(piece) {
 }
 
 // Keep coordinates outside the playing squares, including on smaller memory boards.
-function renderCoordinates(board, size) {
+function renderCoordinates(board, size, flipped = false) {
   const frame = board.parentElement;
-  if (frame.dataset.coordinateSize === String(size)) return;
-  frame.dataset.coordinateSize = size;
+  const key = `${size}:${flipped}`;
+  if (frame.dataset.coordinateSize === key) return;
+  frame.dataset.coordinateSize = key;
   frame.style.setProperty("--size", size);
   frame.querySelectorAll(".board-ranks, .board-files").forEach((node) => node.remove());
   for (const axis of ["ranks", "files"]) {
@@ -88,7 +89,7 @@ function renderCoordinates(board, size) {
     labels.setAttribute("aria-hidden", "true");
     for (let i = 0; i < size; i++) {
       const label = document.createElement("span");
-      label.textContent = axis === "ranks" ? size - i : String.fromCharCode(97 + i);
+      label.textContent = axis === "ranks" ? (flipped ? i + 1 : size - i) : String.fromCharCode(97 + (flipped ? size - i - 1 : i));
       labels.append(label);
     }
     frame.append(labels);

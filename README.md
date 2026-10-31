@@ -201,16 +201,23 @@ at a time, as tabs in the same browser share your practice session.
 ## Learn an opening
 
 Choose **Openings** at the top of the page to practise from the starting position.
-You play White, and Black replies automatically. Select a piece and then its
-destination, drag it there, or use Tab and Enter.
+Choose White or Black in the playlist. The board faces your side, and your
+opponent moves automatically. Select a piece and then its destination, drag it
+there, or use Tab and Enter.
 
-There are two openings to start with:
+There are four repertoire choices to start with:
 
-- **London System** has one line against …d5 and …Nf6, up to eight White moves.
-- **Queen's Gambit** has Accepted and Declined lines, up to five White moves.
-  In these lines, you play Nf3 after Black takes on c4, and Nc3 after Black plays
-  …e6. Other good moves can exist; you're learning the particular lines you've
-  chosen here.
+- **London System · White** builds the setup against …d5 and …Nf6, up to eight moves.
+- **Queen's Gambit · White** covers Accepted and Declined lines, up to five moves.
+  You play Nf3 after Black takes on c4, and Nc3 after Black plays …e6.
+- **Against the London · Black** practises the …d5 and …Nf6 response, up to eight moves.
+- **Queen's Gambit Declined · Black** chooses the Declined defence, then practises
+  responses to White's Bg5 and Exchange continuations, up to five moves.
+
+The two sides have their own checkboxes and variations. Your White Queen's
+Gambit choices don't decide your Black repertoire: you can learn to face both
+Accepted and Declined as White while choosing just Declined as Black. Other
+good moves can exist; you're learning the particular lines you've chosen here.
 
 The playlist shows each opening with its variations underneath. An opening with
 just one line doesn't need a separate variation row. Tick an opening to include
@@ -221,10 +228,27 @@ The checkboxes decide what goes into practice. Clicking a name brings that
 opening or exact variation onto the board straight away, without changing the
 checkboxes or playback mode. That works for an unchecked name too.
 
+Open **Layout** below the playlist to adjust its width and the board size. These
+settings are remembered in this browser. The board also fits itself to the room
+available, and the playlist scrolls rather than growing indefinitely. Names and
+side tags stay on one line; a narrow setting may shorten a name, with its full
+text available when you hover over it.
+
+Use **Show move ideas** above the playlist to hide or restore explanations; this
+choice is remembered too. Hiding them also gives their space back to the board.
+
+When a move has a useful idea behind it, an explanation appears after it's been
+played. Your opponent's latest explanation sits beside the playback controls
+above the board, with yours below it on larger screens. Both stay available
+through the automatic reply, with the move number shown, until that side plays
+another explained move or you restart.
+Smaller screens place the cards below or beside the board to keep it usable.
+They explain moves already played, so they don't show the next move in advance.
+
 The three icon buttons by the board choose how to continue:
 
 - **Shuffle** chooses among your checked openings and their lines.
-- **Repeat** cycles through checked variations of the opening on the board.
+- **Repeat** cycles through checked variations of the opening and side on the board.
 - **Repeat 1** keeps the exact variation on the board, even after you finish it.
 
 Only one mode is active at a time. You can switch while you're playing; it keeps
@@ -233,7 +257,7 @@ highlights its button so you can see what changed. It stays on until you choose
 another mode. The playlist scrolls within its panel as it grows.
 
 Use the **Depth** setting on the main bar to choose **Up to 3**, **Up to 8**, or
-another number of White moves. It's one shared limit for the whole playlist,
+another number of moves per side. It's one shared limit for the whole playlist,
 kept when you switch openings or repeat modes. A shorter line finishes at its
 own length: with Up to 8 selected, the London goes to eight moves and either
 Queen's Gambit line finishes at five. The highest available setting follows the
@@ -251,14 +275,16 @@ too. Get that move right once and its hints clear for your next attempt.
 Completing a line highlights the well-done message and next-action button.
 
 Your browser remembers the playlist, enabled variations, mode, current repeat
-variation and shared depth for next time. Reloading clears hints, run counts and
+variation, White and Black selections, shared depth and layout for next time. Reloading clears hints, run counts and
 completion progress.
 Changing the playlist starts a fresh session; changing depth retains hints for
 the current openings.
 
+The London explanations follow the [London System setup](https://www.chess.com/openings/London-System).
 The Queen's Gambit lines follow the
-[Accepted development with Nf3, e3 and Bxc4](https://www.chess.com/openings/Queens-Gambit-Accepted-3.Nf3-Nf6-4.e3-e6-5.Bxc4)
-and the [Declined setup with Nc3 and Bg5](https://chessbook.com/openings/queens-gambit-declined).
+[Accepted development with Nf3, e3 and Bxc4](https://www.chess.com/openings/Queens-Gambit-Accepted-3.Nf3-Nf6-4.e3-e6-5.Bxc4),
+the [Declined setup with Nc3 and Bg5](https://chessbook.com/openings/queens-gambit-declined),
+and the [Exchange continuation with cxd5 and exd5](https://www.chess.com/openings/Queens-Gambit-Declined-Exchange-Positional-Line-5...Be7).
 
 ## If something isn't working
 

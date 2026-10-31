@@ -130,3 +130,49 @@ assert.equal(uneven.complete,true);
 assert.equal(uneven.targetDepth,8);
 assert.equal(uneven.depthComplete,true);
 console.log('Up-to-depth checks passed: shorter lines, unequal lengths, natural completion and coverage.');
+
+// Black owns its repertoire and responds to White's branches.
+const {QUEENS_GAMBIT_BLACK_LINES, OPENINGS} = require('../static/opening-practice.js');
+const black = new OpeningPractice(8,QUEENS_GAMBIT_BLACK_LINES,'black');
+assert.equal(black.userToMove,false);
+assert.equal(black.play('d7','d5').ignored,true);
+black.reply();
+assert.equal(black.userToMove,true);
+assert.equal(black.play('e7','e5').correct,false);
+assert.equal(black.ply,0);
+black.reply();
+assert.equal(black.hintLevel,1);
+for (let branch=0;branch<2;branch++) {
+  const moves=QUEENS_GAMBIT_BLACK_LINES[branch].moves;
+  for(let ply=0;ply<moves.length;ply+=2){
+    if(ply>0 || branch>0) black.reply();
+    assert.equal(black.userToMove,true);
+    assert.equal(black.play(...moves[ply+1]).correct,true);
+  }
+  assert.equal(black.complete,true);
+  assert.equal(black.targetDepth,5);
+  assert.equal(black.reply(),false);
+  if(branch===0){assert.equal(black.board.g8,'bK');black.restart();}
+}
+assert.equal(black.depthComplete,true);
+assert.equal(black.board.d5,'bP','Exchange variation recaptures White’s pawn');
+assert.equal(OPENINGS.find(o=>o.id==='queens-gambit-black').side,'black');
+assert.ok(!QUEENS_GAMBIT_BLACK_LINES.some(line=>line.name==='Accepted'));
+console.log('Black repertoire checks passed: turn ownership, automatic White moves, mistakes, independent branches, captures, castling and depth cap.');
+
+const ideas = new OpeningPractice(3);
+assert.deepEqual(ideas.ideas,{white:null,black:null});
+ideas.play('d2','d4');
+assert.equal(ideas.ideas.white.notation,'1. d4');
+assert.equal(ideas.ideas.black,null,'Opponent ideas wait for the opponent move');
+ideas.reply();
+assert.equal(ideas.ideas.black.notation,'1... d5');
+assert.equal(ideas.ideas.white.notation,'1. d4');
+ideas.play('c1','f4');
+assert.match(ideas.ideas.white.text,/outside the pawn chain/);
+ideas.reply();
+assert.equal(ideas.ideas.white.notation,'2. Bf4','An automatic reply does not erase the player explanation');
+assert.equal(ideas.ideas.black.notation,'1... d5','An unannotated move leaves the last labelled idea available');
+ideas.restart();
+assert.deepEqual(ideas.ideas,{white:null,black:null});
+console.log('Move idea checks passed: revealed after play, independent sides, persistence through replies and reset.');

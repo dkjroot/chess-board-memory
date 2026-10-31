@@ -227,3 +227,76 @@ h1{font-size:20px;line-height:1.3;margin:0}header{gap:16px}#theme-toggle{flex:no
 @media(orientation:landscape) and (min-width:650px) and (max-height:500px){
   .openings-page .opening-controls{grid-template-columns:auto auto}
 }
+
+.repertoire-side{display:inline-block;font:650 10px/1.4 system-ui;letter-spacing:.3px;margin-left:7px;padding:1px 5px;border:1px solid var(--control-line);border-radius:4px;vertical-align:middle}
+.repertoire-side.white{background:#fffdf5;color:#25342e;border-color:#acb7b0}
+.repertoire-side.black{background:#25342e;color:#fffdf5;border-color:#71867b}
+.playing-side{font-size:12px;color:var(--muted);margin:4px 0 0}
+@media(max-height:750px){.playing-side{margin-top:2px;font-size:11px}}
+
+@media(orientation:landscape) and (min-width:650px) and (max-height:500px){
+  .openings-play .play-heading h2{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}
+
+/* A wider playlist and a smaller adjustable board leave space for move ideas. */
+@media(min-width:781px){
+  .openings-workspace{grid-template-columns:min(var(--playlist-width,340px),38vw) minmax(0,1fr)}
+}
+.opening-tree .playlist-title{display:flex;align-items:center;gap:7px;white-space:nowrap}
+.playlist-name{min-width:0;overflow:hidden;text-overflow:ellipsis}
+.opening-tree .repertoire-side{flex:none;margin-left:0}
+#layout-settings{margin:14px 0;border-block:1px solid var(--line);padding:12px 0}
+#layout-settings label{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px}
+#layout-settings output{font-size:11px;font-weight:400;color:var(--muted)}
+#layout-settings input[type="range"]{min-height:32px;padding:0;border:0;accent-color:var(--accent)}
+#reset-layout{margin-top:8px;padding:7px 10px;min-height:34px}
+.board-column{min-width:0;display:flex;flex-direction:column;align-items:center;gap:8px}
+.idea-slot{width:100%;max-width:540px;height:78px;flex:none}
+.move-idea{height:100%;overflow:auto;background:var(--button);border:1px solid var(--control-line);border-left:3px solid var(--accent);border-radius:8px;padding:8px 11px;color:var(--ink)}
+.move-idea h3{font-size:11px;font-weight:700;margin:0 0 4px;color:var(--accent)}
+.move-idea p{font-size:13px;line-height:1.5;margin:0}
+.openings-page .openings-play .board-wrap{width:calc(100% * var(--board-scale,1));max-width:min(620px,max(160px,calc((100svh - 460px) * var(--board-scale,1))))}
+@media(max-width:780px){
+  .openings-page .openings-play .board-wrap{max-width:min(540px,max(150px,calc((100svh - 330px) * var(--board-scale,1))));order:0}
+  .idea-slot{height:auto;max-height:96px}
+  .idea-slot:has(>[hidden]){display:none}
+  .move-idea{height:auto;max-height:96px}
+  .opponent-idea{order:1}
+  .player-idea{order:2}
+}
+@media(orientation:landscape) and (min-width:650px) and (max-height:500px){
+  .openings-workspace{grid-template-columns:min(var(--playlist-width,340px),30vw) minmax(0,1fr)}
+  .board-column{display:contents}
+  .openings-page .openings-play .board-wrap{grid-column:1;grid-row:1/4;align-self:start;max-width:max(130px,calc((100svh - 220px) * var(--board-scale,1)));order:0}
+  .idea-slot{height:auto;max-height:96px}
+  .idea-slot:has(>[hidden]){display:none}
+  .opponent-idea{grid-column:2;grid-row:1}
+  .player-idea{grid-column:2;grid-row:2}
+  .move-idea{height:auto;max-height:96px}
+  .opening-feedback{grid-column:2;grid-row:3}
+}
+
+/* Share the playback row with the opponent's idea instead of using another row. */
+@media(min-width:601px){
+  .openings-page .opening-controls{grid-template-columns:auto minmax(0,1fr) auto;align-items:center}
+  .opening-controls>.opponent-idea{height:78px;max-height:none;max-width:none;order:0;display:block}
+  .opening-controls>.opponent-idea .move-idea{height:100%;max-height:none}
+}
+@media(min-width:781px){
+  .openings-page .openings-play .board-wrap{max-width:min(620px,max(160px,calc((100svh - 420px) * var(--board-scale,1))))}
+}
+@media(orientation:landscape) and (min-width:650px) and (max-height:500px){
+  .openings-page .opening-controls{grid-template-columns:auto auto}
+  .openings-page .openings-play .board-wrap{max-width:max(130px,calc((100svh - 220px) * var(--board-scale,1)))}
+}
+
+.idea-setting{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:400;margin:8px 0 12px;min-height:32px;cursor:pointer}
+.idea-setting input{width:18px;height:18px;min-height:0;padding:0;margin:0;accent-color:var(--accent)}
+.ideas-off .idea-slot{display:none!important}
+.openings-page.ideas-off .opening-controls{grid-template-columns:minmax(0,1fr) auto}
+@media(min-width:781px) and (min-height:501px){
+  .openings-page.ideas-off .openings-play .board-wrap{max-width:min(620px,max(160px,calc((100svh - 300px) * var(--board-scale,1))))}
+}
+@media(orientation:landscape) and (min-width:650px) and (max-height:500px){
+  .openings-page.ideas-off .opening-controls{grid-template-columns:auto auto}
+}
