@@ -183,11 +183,15 @@ put a comma after the last item in an object. Save the file and start another
 round; there's no need to restart the app. A round you've already started keeps
 its original wording.
 
-### Light and dark mode
+### Colour themes
 
-Use the button at the top of the page to switch. It says **Dark mode** when you're
-in light mode, and **Light mode** when you're in dark mode. The app starts with
-your system's preference and remembers it if you choose something else.
+Choose a colour from the menu at the top of the page: Classic (the original green),
+Purple, B&W, Blue, Metal, Glass or Wood. Each colour has a light and dark version;
+use the button beside the menu to switch between them. Metal, Glass and Wood use
+flat colours for now, without textures.
+
+The app starts with your system's light or dark preference. It remembers your
+chosen colour and appearance across the memory games and openings practice.
 
 Your other settings are remembered in this browser too, including the board size
 you've reached. Round counts and streaks reset when you stop the server. Refreshing

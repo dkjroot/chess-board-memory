@@ -14,13 +14,20 @@ const silhouettes = {
 };
 const svgNS = "http://www.w3.org/2000/svg";
 const themeButton = $("theme-toggle");
+const paletteSelect = $("theme-palette");
+const palettes = ["classic", "purple", "bw", "blue", "metal", "glass", "wood"];
+let palette = "classic";
 let theme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
 try {
   const saved = localStorage.getItem("chess-memory-theme");
   if (["light", "dark"].includes(saved)) theme = saved;
+  const savedPalette = localStorage.getItem("chess-memory-palette");
+  if (palettes.includes(savedPalette)) palette = savedPalette;
 } catch { /* Theme still works when storage is unavailable. */ }
 function applyTheme() {
   document.documentElement.dataset.theme = theme;
+  document.documentElement.dataset.palette = palette;
+  paletteSelect.value = palette;
   themeButton.textContent = theme === "dark" ? "Light mode" : "Dark mode";
 }
 applyTheme();
@@ -28,6 +35,11 @@ themeButton.addEventListener("click", () => {
   theme = theme === "dark" ? "light" : "dark";
   applyTheme();
   try { localStorage.setItem("chess-memory-theme", theme); } catch { /* Optional. */ }
+});
+paletteSelect.addEventListener("change", () => {
+  palette = paletteSelect.value;
+  applyTheme();
+  try { localStorage.setItem("chess-memory-palette", palette); } catch { /* Optional. */ }
 });
 const names = {K: "king", Q: "queen", R: "rook", B: "bishop", N: "knight", P: "pawn"};
 const pieceName = (piece) => `${piece[0] === "w" ? "White" : "Black"} ${names[piece[1]]}`;

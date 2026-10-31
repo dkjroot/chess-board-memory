@@ -86,6 +86,33 @@ function expectedMarks(round) {
     await page.goto(process.env.TEST_URL || "http://127.0.0.1:8765");
     assert.equal(await page.locator("html").getAttribute("data-theme"), "light");
     assert.equal(await page.locator("#theme-toggle").textContent(), "Dark mode");
+    // Palette and appearance are independent, persist, and work on both pages.
+    const paletteNames = ["classic", "purple", "bw", "blue", "metal", "glass", "wood"];
+    assert.deepEqual(await page.locator("#theme-palette option").evaluateAll(options => options.map(o => o.value)), paletteNames);
+    const pageColours = new Set();
+    for (const palette of paletteNames) {
+      await page.locator("#theme-palette").selectOption(palette);
+      for (const appearance of ["light", "dark"]) {
+        if (await page.locator("html").getAttribute("data-theme") !== appearance) await page.locator("#theme-toggle").click();
+        await page.reload();
+        assert.equal(await page.locator("html").getAttribute("data-theme"), appearance);
+        assert.equal(await page.locator("#theme-palette").inputValue(), palette);
+        const colours = await page.evaluate(() => {
+          const root = getComputedStyle(document.documentElement);
+          return ["--paper", "--light", "--dark"].map(key => root.getPropertyValue(key).trim()).join("/");
+        });
+        assert.ok(!pageColours.has(colours), `Distinct colours for ${palette} ${appearance}`);
+        pageColours.add(colours);
+        await page.getByRole("link", {name:"Openings", exact:true}).click();
+        assert.equal(await page.locator("html").getAttribute("data-theme"), appearance);
+        assert.equal(await page.locator("#theme-palette").inputValue(), palette);
+        assert.equal(await page.locator("#board .piece").count(), 32);
+        await page.screenshot({path:path.join(artifactDir, `theme-${palette}-${appearance}.png`), fullPage:true});
+        await page.goto(process.env.TEST_URL || "http://127.0.0.1:8765");
+      }
+    }
+    await page.locator("#theme-palette").selectOption("classic");
+    await page.locator("#theme-toggle").click();
     assert.equal(await page.locator("h1").textContent(), "Chess Board Memory");
     assert.equal(await page.locator(".intro, footer").count(), 0);
     await page.screenshot({path: path.join(artifactDir, "desktop.png"), fullPage: true});
@@ -362,6 +389,11 @@ function expectedMarks(round) {
     await darkPage.reload();
     assert.equal(await darkPage.locator("html").getAttribute("data-theme"), "light");
     assert.equal(await darkPage.locator("#theme-toggle").textContent(), "Dark mode");
+    await darkPage.locator("#theme-palette").selectOption("glass");
+    assert.equal(await darkPage.locator("body").evaluate(body => getComputedStyle(body).backgroundColor), "rgb(239, 249, 250)");
+    await darkPage.evaluate(() => localStorage.setItem("chess-memory-palette", "unknown"));
+    await darkPage.reload();
+    assert.equal(await darkPage.locator("#theme-palette").inputValue(), "classic");
     await darkPage.evaluate(() => localStorage.setItem("chess-memory-settings", JSON.stringify({mode: "fixed", size: 4, count: 5, seconds: 2, palette: "all"})));
     await darkPage.reload();
     assert.equal(await darkPage.locator("#mode").inputValue(), "memory_fixed");
