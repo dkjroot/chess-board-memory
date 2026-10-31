@@ -37,6 +37,10 @@ class Handler(BaseHTTPRequestHandler):
         route = urlsplit(self.path).path
         files = {"/": ("index.html", "text/html"), "/style.css": ("style.css", "text/css"),
                  "/app.js": ("app.js", "text/javascript"),
+                 "/openings": ("openings.html", "text/html"),
+                 "/openings.js": ("openings.js", "text/javascript"),
+                 "/opening-practice.js": ("opening-practice.js", "text/javascript"),
+                 "/board-ui.js": ("board-ui.js", "text/javascript"),
                  "/favicon.svg": ("favicon.svg", "image/svg+xml")}
         if route not in files:
             self.json_reply(404, {"error": "Page not found."})

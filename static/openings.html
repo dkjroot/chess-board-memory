@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Openings · Chess Board Memory</title>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="/style.css">
+  <script src="/board-ui.js" defer></script>
+  <script src="/opening-practice.js" defer></script>
+  <script src="/openings.js" defer></script>
+</head>
+<body class="openings-page">
+  <header><h1><a class="brand" href="/">Chess Board Memory</a></h1><button id="theme-toggle" type="button">Dark mode</button></header>
+  <nav class="page-nav" aria-label="Practice pages"><a href="/">Memory games</a><a href="/openings" aria-current="page">Openings</a></nav>
+  <main>
+    <div class="workspace openings-workspace">
+      <section class="card play openings-play" aria-label="Opening practice">
+        <div class="play-heading"><div><p class="eyebrow" id="phase">YOUR TURN · WHITE</p><h2 id="instruction">Opening practice</h2></div><span id="badge" class="badge"></span></div>
+        <div class="opening-controls">
+          <div class="playback-modes" role="group" aria-label="Practice mode">
+            <button type="button" data-mode="shuffle" aria-label="Shuffle" aria-pressed="true" title="Shuffle: all checked openings"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 10a8 8 0 0 1 14-5l2 2M20 3v4h-4M20 14A8 8 0 0 1 6 19l-2-2M4 21v-4h4"/></svg></button>
+            <button type="button" data-mode="repeat-one" aria-label="Repeat 1" aria-pressed="false" title="Repeat 1: this exact variation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5H8a7 7 0 0 0 0 14h6a6 6 0 0 0 6-6M14 2l4 3-4 3"/><path class="repeat-number" d="M19 17l2-1v6m-2 0h4"/></svg></button>
+            <button type="button" data-mode="repeat" aria-label="Repeat" aria-pressed="false" title="Repeat: checked variations of this opening"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5H8a7 7 0 0 0 0 14h8a6 6 0 0 0 6-6M14 2l4 3-4 3"/></svg></button>
+          </div>
+          <div><label for="depth">White moves</label><select id="depth"></select></div>
+          <button id="restart" type="button">Restart</button>
+        </div>
+        <div class="opening-stage">
+          <div class="board-wrap"><div id="board" class="board" role="group" aria-label="Chess board, White at the bottom"></div></div>
+          <div class="opening-feedback">
+            <p id="mode-note" class="muted"></p>
+            <p id="status" role="status" aria-live="polite"></p>
+            <p id="hint" class="hint-note"></p>
+            <div class="actions"><button id="again" type="button" hidden>Next line</button><button id="deeper" class="primary" type="button" hidden>Add the next move →</button></div>
+            <div class="opening-history"><h3>Moves played</h3><p id="moves">Your moves will appear here.</p></div>
+            <p id="coverage" class="muted"></p>
+            <div class="progress"><div><span id="completed">0</span><small>completed runs</small></div><div><span id="mistakes">0</span><small>mistake restarts</small></div></div>
+          </div>
+        </div>
+      </section>
+      <aside class="card settings opening-library">
+        <h2>Openings to practise</h2>
+        <p class="muted">Tick to include; click a name to play it now.</p>
+        <div id="opening-tree" class="opening-tree" role="group" aria-label="Openings and variations" tabindex="0"></div>
+        <details><summary>How to practise</summary><p>Select a White piece and its destination, or drag it. Tab and Enter work too.</p><p>Click a playlist name to bring it onto the board without changing the checkboxes or mode. Shuffle chooses from checked openings. Repeat cycles through the checked variations of the opening on the board. Repeat 1 keeps that exact variation, and switches on automatically after a mistake. Choose another icon whenever you're ready to mix things up.</p><p>A mistake shows your move with a flashing red outline, then sends you back to the start. One mistake highlights the piece when you reach that position again; a second adds a ghost destination. Get the move right once and its hints clear.</p><p>Finish the enabled lines at one depth before adding a move. The London line has eight White moves; Queen’s Gambit Accepted and Declined each have five. Your menu choices, mode and depths are remembered in this browser; hints and run progress reset when you reload.</p></details>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

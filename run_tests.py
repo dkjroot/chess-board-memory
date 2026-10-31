@@ -63,6 +63,8 @@ def main() -> int:
     match = re.search(r"Ran (\d+) tests?", unit.log.read_text(encoding="utf-8", errors="replace"))
     unit.detail = f"{match[1]} tests" if match else "see log"
     checks.append(unit)
+    checks.append(execute("Opening model tests", [args.node, "tests/openings.cjs"],
+                          artifacts / "openings.log", args.timeout, env))
     sources = sorted((ROOT / "static").rglob("*.js")) + sorted((ROOT / "tests").rglob("*.cjs"))
     for index, source in enumerate(sources):
         checks.append(execute(f"JavaScript syntax: {source.relative_to(ROOT)}",
@@ -91,6 +93,8 @@ def main() -> int:
                 env["TEST_ARTIFACT_DIR"] = str(artifacts / "screenshots")
                 checks.append(execute("Browser tests", [args.node, "tests/browser.cjs"],
                                       browser_log, args.timeout, env))
+                checks.append(execute("Opening browser tests", [args.node, "tests/openings-browser.cjs"],
+                                      artifacts / "openings-browser.log", args.timeout, env))
             finally:
                 server.shutdown()
                 server.server_close()

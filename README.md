@@ -194,6 +194,62 @@ you've reached. Round counts and streaks reset when you stop the server. Refresh
 the page abandons the current puzzle, so do that between rounds. Stick to one tab
 at a time, as tabs in the same browser share your practice session.
 
+## Learn an opening
+
+Choose **Openings** at the top of the page to practise from the starting position.
+You play White, and Black replies automatically. Select a piece and then its
+destination, drag it there, or use Tab and Enter.
+
+There are two openings to start with:
+
+- **London System** has one line against …d5 and …Nf6, up to eight White moves.
+- **Queen's Gambit** has Accepted and Declined lines, up to five White moves.
+  In these lines, you play Nf3 after Black takes on c4, and Nc3 after Black plays
+  …e6. Other good moves can exist; you're learning the particular lines you've
+  chosen here.
+
+The playlist shows each opening with its variations underneath. An opening with
+just one line doesn't need a separate variation row. Tick an opening to include
+all its lines, or choose individual variations. Unticking every variation also
+unticks the opening. You can leave the playlist empty if you want.
+
+The checkboxes decide what goes into practice. Clicking a name brings that
+opening or exact variation onto the board straight away, without changing the
+checkboxes or playback mode. That works for an unchecked name too.
+
+The three icon buttons by the board choose how to continue:
+
+- **Shuffle** chooses among your checked openings and their lines.
+- **Repeat** cycles through checked variations of the opening on the board.
+- **Repeat 1** keeps the exact variation on the board, even after you finish it.
+
+Only one mode is active at a time. You can switch while you're playing; it keeps
+the current position. A mistake automatically turns on Repeat 1, and briefly
+highlights its button so you can see what changed. It stays on until you choose
+another mode. The playlist scrolls within its panel as it grows.
+
+Choose how many White moves to practise. Finish the enabled lines at that depth
+before adding the next move. Shared prefixes within an opening count once until
+they branch. Shuffle's maximum depth follows the shortest enabled line.
+
+If you play a move outside the line you're studying, your piece moves to the
+square you chose with a flashing red outline. After a short pause, the board
+goes back to the start. If you prefer reduced motion in your system settings,
+the outline stays steady. When you reach the position again, the piece to move
+is highlighted. Make a second mistake there and a ghost shows its destination
+too. Get that move right once and its hints clear for your next attempt.
+Completing a line highlights the well-done message and next-action button.
+
+Your browser remembers the playlist, enabled variations, mode, current repeat
+variation and depths for next time. Repeat modes retain a depth for each opening,
+separate from Shuffle. Reloading clears hints, run counts and completion progress.
+Changing the playlist starts a fresh session; changing depth retains hints for
+the current openings.
+
+The Queen's Gambit lines follow the
+[Accepted development with Nf3, e3 and Bxc4](https://www.chess.com/openings/Queens-Gambit-Accepted-3.Nf3-Nf6-4.e3-e6-5.Bxc4)
+and the [Declined setup with Nc3 and Bg5](https://chessbook.com/openings/queens-gambit-declined).
+
 ## If something isn't working
 
 On Windows, if `py` isn't available but Python is installed, try `python app.py`.
