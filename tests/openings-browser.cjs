@@ -2,7 +2,7 @@ const {chromium} = require('playwright');
 const assert = require('node:assert/strict');
 const fs = require('node:fs');
 const path = require('node:path');
-const {LONDON_LINES, QUEENS_GAMBIT_LINES, QUEENS_GAMBIT_BLACK_LINES} = require('../static/opening-practice.js');
+const {LONDON_LINES, QUEENS_GAMBIT_LINES, QUEENS_GAMBIT_BLACK_LINES, OPENINGS, LEVELS} = require('../static/opening-practice.js');
 (async () => {
   const browser = await chromium.launch({headless:true, ...(process.env.TEST_BROWSER_EXECUTABLE ? {executablePath:process.env.TEST_BROWSER_EXECUTABLE} : {})});
   try {
@@ -13,7 +13,7 @@ const {LONDON_LINES, QUEENS_GAMBIT_LINES, QUEENS_GAMBIT_BLACK_LINES} = require('
     const artifacts = process.env.TEST_ARTIFACT_DIR || path.join(__dirname,'artifacts');
     fs.mkdirSync(artifacts,{recursive:true});
     await page.goto(base);
-    await page.evaluate(() => localStorage.setItem('chess-openings-preferences',JSON.stringify({opening:'london',mode:'repeat'})));
+    await page.evaluate(() => localStorage.setItem('chess-openings-preferences',JSON.stringify({opening:'london',mode:'repeat',enabled:['london','queens-gambit'],level:'early-intermediate'})));
     await page.getByRole('link',{name:'Openings',exact:true}).click();
     const square = sq => page.locator(`[data-square="${sq}"]`);
     const checkbox = id => page.locator(`[data-choice="${id}"]`);
@@ -30,7 +30,7 @@ const {LONDON_LINES, QUEENS_GAMBIT_LINES, QUEENS_GAMBIT_BLACK_LINES} = require('
     };
     assert.equal(await page.locator('.square').count(),64,JSON.stringify(errors));
     assert.equal(await page.locator('#board .piece').count(),32);
-    assert.equal(await page.locator('#opening-tree input').count(),8);
+    assert.equal(await page.locator('.opening-group').count(),OPENINGS.filter(o=>o.level<=1).length);
     assert.equal(await checkbox('london-d5').count(),0,'Single-line openings have no child option');
     // Move ideas are shown only after their move, and stay readable through a reply.
     assert.equal(await page.locator('#player-idea').isVisible(),false);
@@ -245,7 +245,7 @@ const {LONDON_LINES, QUEENS_GAMBIT_LINES, QUEENS_GAMBIT_BLACK_LINES} = require('
     assert.equal(await square('e6').getAttribute('aria-label'),'E6, Black pawn');
     // The library grows inside its own scrollbar rather than stretching the layout.
     await page.evaluate(() => {
-      const tree=document.querySelector('#opening-tree'), template=tree.firstElementChild;
+      const tree=document.querySelector('#opening-tree'), template=tree.querySelector('.opening-group');
       for(let i=0;i<35;i++) tree.append(template.cloneNode(true));
     });
     const scrolling=await page.locator('#opening-tree').evaluate(tree=>{tree.scrollTop=tree.scrollHeight;return {height:tree.clientHeight,scrollHeight:tree.scrollHeight,top:tree.scrollTop};});
@@ -328,6 +328,32 @@ const {LONDON_LINES, QUEENS_GAMBIT_LINES, QUEENS_GAMBIT_BLACK_LINES} = require('
     assert.equal(await page.locator('#show-ideas').isChecked(),false);
     assert.equal(await page.locator('#opponent-idea').isVisible(),false);
     await page.locator('#show-ideas').check();
+    // Levels are cumulative, remembered, and preserve selections paused above the filter.
+    await page.setViewportSize({width:1280,height:900});
+    const levelPicker=page.locator('#player-level');
+    for(let i=0;i<LEVELS.length;i++){
+      await levelPicker.selectOption(LEVELS[i].id);
+      assert.equal(await page.locator('.opening-group').count(),OPENINGS.filter(o=>o.level<=i).length);
+    }
+    assert.equal(await page.locator('.opening-group').count(),OPENINGS.length);
+    assert.equal(await checkbox('najdorf-black').isChecked(),false);
+    await checkbox('najdorf-black').check();
+    await title('najdorf-black').click();await blackTurn();
+    assert.equal(await page.locator('#instruction').textContent(),'Sicilian Najdorf');
+    await levelPicker.selectOption('beginner');
+    await blackTurn();
+    assert.equal(await title('najdorf-black').count(),0);
+    assert.match(await page.locator('#level-note').textContent(),/paused/);
+    assert.ok(await page.evaluate(()=>JSON.parse(localStorage.getItem('chess-openings-preferences')).enabled.includes('najdorf-black')));
+    assert.equal(await page.locator('#instruction').textContent(),'Against the London');
+    await page.reload();await blackTurn();
+    assert.equal(await levelPicker.inputValue(),'beginner');
+    assert.equal(await title('najdorf-black').count(),0);
+    const beforeLevelRaise=await page.locator('#moves').textContent();
+    await levelPicker.selectOption('expert');
+    assert.equal(await checkbox('najdorf-black').isChecked(),true);
+    assert.equal(await page.locator('#moves').textContent(),beforeLevelRaise,'Raising the level preserves the current line');
+    await save('expert-opening-catalogue.png');
     await page.getByRole('link',{name:'Memory games',exact:true}).click();
     await page.locator('#start').click(); await page.locator('#hide').waitFor({state:'visible'});
     assert.ok(await page.locator('#board .piece').count()>0);

@@ -5,3 +5,9 @@ Python, browsers and system UI fonts retain their respective licenses.
 
 Optional browser tests use Playwright, installed separately by the developer.
 Playwright is not bundled or required to run the application.
+
+Opening names and move-order references for the expanded repertoire use the
+Lichess chess-openings dataset (CC0 1.0 Universal):
+https://github.com/lichess-org/chess-openings
+The teaching levels, selected continuations and explanatory notes are curated
+for this project. No third-party chess library is required by the app.

@@ -40,6 +40,7 @@ class Handler(BaseHTTPRequestHandler):
                  "/openings": ("openings.html", "text/html"),
                  "/openings.js": ("openings.js", "text/javascript"),
                  "/opening-practice.js": ("opening-practice.js", "text/javascript"),
+                 "/repertoire.js": ("repertoire.js", "text/javascript"),
                  "/board-ui.js": ("board-ui.js", "text/javascript"),
                  "/favicon.svg": ("favicon.svg", "image/svg+xml")}
         if route not in files:

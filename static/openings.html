@@ -7,6 +7,7 @@
   <link rel="icon" href="/favicon.svg" type="image/svg+xml">
   <link rel="stylesheet" href="/style.css">
   <script src="/board-ui.js" defer></script>
+  <script src="/repertoire.js" defer></script>
   <script src="/opening-practice.js" defer></script>
   <script src="/openings.js" defer></script>
 </head>
@@ -44,9 +45,12 @@
       </section>
       <aside class="card settings opening-library">
         <h2>Openings to practise</h2>
+        <label for="player-level">Show openings up to</label><select id="player-level"></select>
+        <p id="level-note" class="muted"></p>
         <p class="muted">Tick to include; click a name to play it now.</p>
         <label class="idea-setting"><input id="show-ideas" type="checkbox" checked> Show move ideas</label>
         <div id="opening-tree" class="opening-tree" role="group" aria-label="Openings and variations" tabindex="0"></div>
+        <details class="learning-order"><summary>Why this learning order?</summary><p>These levels suggest an order to explore, rather than a rating requirement. Start with natural development and clear central plans; later levels add flexible pawn structures and sharper theoretical choices. Earlier openings remain useful at every level.</p><p>Inspired by <a href="https://www.chess.com/article/view/the-best-chess-openings-for-beginners" target="_blank" rel="noopener">Chess.com’s beginner guide</a> and <a href="https://www.chess.com/article/view/how-to-develop-an-opening-repertoire" target="_blank" rel="noopener">FM Eric Schiller’s repertoire guide</a>. The exact six-level grouping is our teaching choice. Each entry contains selected short lines, not every possible reply.</p></details>
         <details id="layout-settings"><summary>Layout</summary>
           <label for="playlist-width">Playlist width <output id="playlist-width-value" for="playlist-width"></output></label><input id="playlist-width" type="range" min="280" max="460" step="10" value="340">
           <label for="board-scale">Board size <output id="board-scale-value" for="board-scale"></output></label><input id="board-scale" type="range" min="65" max="100" step="5" value="100">

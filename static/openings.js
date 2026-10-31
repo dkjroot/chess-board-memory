@@ -37,7 +37,7 @@ applyLayout();
 
 const preferences = {
   opening: "london", line: "london-d5", mode: "shuffle", selected: false,
-  enabled: OPENINGS.filter(opening => opening.side === "white").map(opening => opening.id), depth: 3,
+  enabled: ["london"], depth: 3, level: "beginner",
   variations: {}
 };
 for (const opening of OPENINGS) preferences.variations[opening.id] = opening.lines.map(line => line.id);
@@ -48,6 +48,11 @@ try {
   preferences.selected = saved?.selected === true;
   if (typeof saved?.line === "string") preferences.line = saved.line;
   if (Array.isArray(saved?.enabled)) preferences.enabled = OPENINGS.filter(opening => saved.enabled.includes(opening.id)).map(opening => opening.id);
+  if (LEVELS.some(level => level.id === saved?.level)) preferences.level = saved.level;
+  else if (saved) {
+    const previous = preferences.enabled.concat(preferences.selected ? [preferences.opening] : []);
+    preferences.level = LEVELS[Math.max(0, ...OPENINGS.filter(opening => previous.includes(opening.id)).map(opening => opening.level))].id;
+  }
   // Migrate the previous per-mode settings once, using the depth that was active.
   const depth = saved?.depth ?? (saved?.mode && saved.mode !== "shuffle" ? saved.depths?.[saved.opening] : saved?.shuffleDepth) ?? Number(localStorage.getItem("chess-openings-depth"));
   const catalogueDepth = Math.max(...OPENINGS.flatMap(opening => opening.lines.map(line => line.moves.length / 2)));
@@ -60,8 +65,13 @@ try {
 } catch { /* Saved settings and storage are optional. */ }
 const savedOpening = OPENINGS.find(opening => opening.id === preferences.opening);
 if (!savedOpening.lines.some(line => line.id === preferences.line)) preferences.line = savedOpening.lines[0].id;
+const levelRank = () => LEVELS.findIndex(level => level.id === preferences.level);
+const isAvailable = id => OPENINGS.find(opening => opening.id === id).level <= levelRank();
+const visibleOpenings = () => OPENINGS.filter(opening => opening.level <= levelRank()).sort((a,b) => a.level - b.level);
+const activeEnabled = () => preferences.enabled.filter(isAvailable);
+if (!isAvailable(preferences.opening)) { preferences.selected = false; preferences.mode = "shuffle"; }
 const findOpening = id => OPENINGS.find(opening => opening.id === id);
-const enabledLines = id => preferences.enabled.includes(id) ? findOpening(id).lines.filter(line => preferences.variations[id].includes(line.id)) : [];
+const enabledLines = id => preferences.enabled.includes(id) && isAvailable(id) ? findOpening(id).lines.filter(line => preferences.variations[id].includes(line.id)) : [];
 function practiceLines(id) {
   const lines = enabledLines(id);
   const chosen = id === preferences.opening && findOpening(id).lines.find(line => line.id === preferences.line);
@@ -82,11 +92,11 @@ function savePreferences() {
   try { localStorage.setItem("chess-openings-preferences", JSON.stringify(preferences)); } catch { /* Optional. */ }
 }
 function pool() {
-  return preferences.mode === "shuffle" ? preferences.enabled : (practiceLines(preferences.opening).length ? [preferences.opening] : []);
+  return preferences.mode === "shuffle" ? activeEnabled() : (practiceLines(preferences.opening).length ? [preferences.opening] : []);
 }
 function maxDepth() {
-  const enabled = preferences.enabled.flatMap(enabledLines);
-  const lines = enabled.length ? enabled : OPENINGS.flatMap(opening => opening.lines);
+  const enabled = activeEnabled().flatMap(enabledLines);
+  const lines = enabled.length ? enabled : visibleOpenings().flatMap(opening => opening.lines);
   return Math.max(...lines.map(line => line.moves.length / 2));
 }
 
@@ -104,7 +114,18 @@ function settingsPanel() {
   const focused = document.activeElement?.dataset.choice;
   const scrollTop = $("opening-tree").scrollTop;
   $("opening-tree").replaceChildren();
-  for (const opening of OPENINGS) {
+  $("player-level").value = preferences.level;
+  const hidden = preferences.enabled.filter(id => !isAvailable(id)).length;
+  $("level-note").textContent = `${LEVELS[levelRank()].description} ${visibleOpenings().length} repertoire choices.${hidden ? ` ${hidden} checked above this level ${hidden === 1 ? "is" : "are"} paused.` : ""}`;
+  let lastLevel = -1;
+  for (const opening of visibleOpenings()) {
+    if (opening.level !== lastLevel) {
+      const heading = document.createElement("h3");
+      heading.className = "opening-level-heading";
+      heading.textContent = LEVELS[opening.level].name;
+      $("opening-tree").append(heading);
+      lastLevel = opening.level;
+    }
     const group = document.createElement("div");
     group.className = "opening-group";
     const ids = preferences.variations[opening.id];
@@ -121,7 +142,7 @@ function settingsPanel() {
       name.className = "playlist-name";
       name.textContent = text;
       title.append(name, side);
-      title.title = `${text} · ${opening.side === "black" ? "Black" : "White"}`;
+      title.title = `${text} · ${opening.side === "black" ? "Black" : "White"} · ${LEVELS[opening.level].name}`;
       title.dataset.select = id;
       title.addEventListener("click", () => selectPlaylist(opening.id, parent ? null : id));
       checkbox.type = "checkbox";
@@ -196,7 +217,7 @@ function rememberCurrent() {
 }
 function startSession(depth = preferences.depth, reset = true) {
   cancelReply();
-  if (!preferences.enabled.includes(preferences.opening) && !preferences.selected) preferences.mode = "shuffle";
+  if (!activeEnabled().includes(preferences.opening) && !preferences.selected) preferences.mode = "shuffle";
   if (preferences.mode === "repeat-one" && !practiceLines(preferences.opening).some(line => line.id === preferences.line)) {
     preferences.line = practiceLines(preferences.opening)[0].id;
   }
@@ -423,6 +444,25 @@ $("depth").addEventListener("change", () => startSession(Number($("depth").value
 for (const button of document.querySelectorAll("[data-mode]")) button.addEventListener("click", () => setMode(button.dataset.mode));
 document.addEventListener("keydown", event => {
   if (event.key === "Escape") { selected = null; render(); }
+});
+for (const level of LEVELS) {
+  const option = document.createElement("option");
+  option.value = level.id; option.textContent = level.name;
+  $("player-level").append(option);
+}
+$("player-level").addEventListener("change", () => {
+  preferences.level = $("player-level").value;
+  settingsPanel();
+  $("opening-tree").scrollTop = 0;
+  savePreferences();
+  if (!practice || !isAvailable(activeOpening) || preferences.depth > maxDepth()) {
+    preferences.selected = false;
+    if (!isAvailable(preferences.opening)) preferences.mode = "shuffle";
+    startSession();
+  } else {
+    for (const id of pool()) if (!sessions.has(id)) sessions.set(id, new OpeningPractice(preferences.depth, practiceLines(id), findOpening(id).side));
+    depthOptions(); render();
+  }
 });
 settingsPanel();
 startSession();

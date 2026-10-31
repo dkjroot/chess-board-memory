@@ -44,11 +44,14 @@ const QUEENS_GAMBIT_BLACK_LINES = [
     ["c1", "g5", "Bg5", "Develop the bishop and pin the f6 knight along the diagonal towards Black’s queen."], ["f8", "e7", "Be7", "Develop the bishop and clear the way for kingside castling."]
   ]}
 ];
+const catalogue = typeof module !== "undefined" ? require("./repertoire.js") : REPERTOIRE;
+const LEVELS = catalogue.levels;
 const OPENINGS = [
-  {id: "london", name: "London System", side: "white", lines: LONDON_LINES},
-  {id: "queens-gambit", name: "Queen's Gambit", side: "white", lines: QUEENS_GAMBIT_LINES},
-  {id: "london-black", name: "Against the London", side: "black", lines: [{id: "london-black-d5", name: "…d5 and …Nf6", moves: LONDON_LINES[0].moves}]},
-  {id: "queens-gambit-black", name: "Queen's Gambit Declined", side: "black", lines: QUEENS_GAMBIT_BLACK_LINES}
+  {id: "london", name: "London System", side: "white", level: 0, lines: LONDON_LINES},
+  {id: "queens-gambit", name: "Queen's Gambit", side: "white", level: 1, lines: QUEENS_GAMBIT_LINES},
+  {id: "london-black", name: "Against the London", side: "black", level: 0, lines: [{id: "london-black-d5", name: "…d5 and …Nf6", moves: LONDON_LINES[0].moves}]},
+  {id: "queens-gambit-black", name: "Queen's Gambit Declined", side: "black", level: 1, lines: QUEENS_GAMBIT_BLACK_LINES},
+  ...catalogue.openings
 ];
 
 function startingPosition() {
@@ -165,4 +168,4 @@ class OpeningPractice {
   }
 }
 
-if (typeof module !== "undefined") module.exports = {OpeningPractice, LONDON_LINES, QUEENS_GAMBIT_LINES, QUEENS_GAMBIT_BLACK_LINES, OPENINGS, startingPosition};
+if (typeof module !== "undefined") module.exports = {OpeningPractice, LONDON_LINES, QUEENS_GAMBIT_LINES, QUEENS_GAMBIT_BLACK_LINES, OPENINGS, LEVELS, startingPosition};

@@ -205,14 +205,34 @@ Choose White or Black in the playlist. The board faces your side, and your
 opponent moves automatically. Select a piece and then its destination, drag it
 there, or use Tab and Enter.
 
-There are four repertoire choices to start with:
+There are **30 White/Black repertoire choices with 56 short lines**. Use
+**Show openings up to** in the left panel to choose a learning level. Each level
+includes everything below it; Expert shows the whole catalogue.
 
-- **London System · White** builds the setup against …d5 and …Nf6, up to eight moves.
-- **Queen's Gambit · White** covers Accepted and Declined lines, up to five moves.
-  You play Nf3 after Black takes on c4, and Nc3 after Black plays …e6.
-- **Against the London · Black** practises the …d5 and …Nf6 response, up to eight moves.
-- **Queen's Gambit Declined · Black** chooses the Declined defence, then practises
-  responses to White's Bg5 and Exchange continuations, up to five moves.
+| Level | Openings added |
+| --- | --- |
+| Beginner | London, Italian, Scandinavian and Caro-Kann. |
+| Early intermediate | Queen's Gambit, Scotch, Vienna and French. |
+| Intermediate | Ruy Lopez, Slav, Alapin Sicilian and English. |
+| Late intermediate | Nimzo-Indian, Queen's Indian, Pirc and Réti. |
+| Advanced | King's Indian, Catalan, Sicilian Dragon and Tarrasch. |
+| Expert | Najdorf, Grünfeld, Semi-Slav, Modern Benoni and Open Sicilian as White. |
+
+These are suggestions for when to explore an opening, rather than rating
+requirements. A beginner-friendly opening can serve an expert too. The order
+starts with natural development and clear central plans, then adds flexible
+pawn structures and sharper theoretical choices. The six-level grouping is my
+suggested learning order for this app. There isn't one universally agreed order.
+
+Your level is remembered. Lowering it pauses checked choices above that level
+without forgetting them; raising it restores those selections. Raising the level
+doesn't automatically tick the new openings or interrupt a line you're playing.
+Older saved playlists start at a level that keeps their checked openings visible.
+
+Each choice has selected, legal introductory lines, generally five to eight
+moves long. This gives you a broad set to explore, rather than an exhaustive
+answer to every possible reply. The later labels describe more demanding opening
+families; these short lines don't pretend to replace a full advanced course.
 
 The two sides have their own checkboxes and variations. Your White Queen's
 Gambit choices don't decide your Black repertoire: you can learn to face both
@@ -274,17 +294,29 @@ is highlighted. Make a second mistake there and a ghost shows its destination
 too. Get that move right once and its hints clear for your next attempt.
 Completing a line highlights the well-done message and next-action button.
 
-Your browser remembers the playlist, enabled variations, mode, current repeat
-variation, White and Black selections, shared depth and layout for next time. Reloading clears hints, run counts and
-completion progress.
-Changing the playlist starts a fresh session; changing depth retains hints for
-the current openings.
+Your browser remembers the level, playlist, enabled variations, mode, current
+repeat variation, White and Black selections, shared depth and layout for next
+time. Reloading clears hints, run counts and completion progress. Changing the
+playlist starts a fresh session; changing depth retains hints for the current
+openings.
 
-The London explanations follow the [London System setup](https://www.chess.com/openings/London-System).
-The Queen's Gambit lines follow the
-[Accepted development with Nf3, e3 and Bxc4](https://www.chess.com/openings/Queens-Gambit-Accepted-3.Nf3-Nf6-4.e3-e6-5.Bxc4),
-the [Declined setup with Nc3 and Bg5](https://chessbook.com/openings/queens-gambit-declined),
-and the [Exchange continuation with cxd5 and exd5](https://www.chess.com/openings/Queens-Gambit-Declined-Exchange-Positional-Line-5...Be7).
+The expanded catalogue uses opening names and move-order references from the
+[Lichess opening dataset](https://github.com/lichess-org/chess-openings), released
+under CC0. The practice lines are selected for this project; the move
+explanations and six-level learning order are written for it.
+
+For more background on the chess ideas covered here, these are useful further
+reading:
+
+- [Chess.com's beginner guide](https://www.chess.com/article/view/the-best-chess-openings-for-beginners)
+  and [FM Eric Schiller's repertoire guide](https://www.chess.com/article/view/how-to-develop-an-opening-repertoire)
+  discuss choosing and learning openings.
+- [The London System](https://www.chess.com/openings/London-System) explains the
+  familiar bishop-outside-the-pawn-chain setup.
+- These guides cover the
+  [Queen's Gambit Accepted](https://www.chess.com/openings/Queens-Gambit-Accepted-3.Nf3-Nf6-4.e3-e6-5.Bxc4),
+  [Declined](https://chessbook.com/openings/queens-gambit-declined) and
+  [Exchange variation](https://www.chess.com/openings/Queens-Gambit-Declined-Exchange-Positional-Line-5...Be7).
 
 ## If something isn't working
 
