@@ -58,9 +58,9 @@ class OpeningPractice {
     this.lineIndex = 0;
     this.setDepth(depth);
   }
-  get maxDepth() { return Math.min(...this.lines.map((line) => Math.floor(line.moves.length / 2))); }
+  get maxDepth() { return Math.max(...this.lines.map((line) => Math.floor(line.moves.length / 2))); }
   setDepth(depth) {
-    if (!Number.isInteger(depth) || depth < 1 || depth > this.maxDepth) throw new Error("Invalid practice depth.");
+    if (!Number.isInteger(depth) || depth < 1) throw new Error("Invalid practice depth.");
     if (this.depth !== depth) { this.coverage.clear(); this.lineIndex = 0; this.ply = 0; }
     this.depth = depth;
     this.restart();
@@ -77,7 +77,7 @@ class OpeningPractice {
     return this.candidates.includes(target) ? target : this.candidates[0];
   }
   pinLine(id = null) {
-    const matching = this.lines.filter(line => this.history.every((san, i) => line.moves[i][2] === san));
+    const matching = this.lines.filter(line => this.history.every((san, i) => line.moves[i]?.[2] === san));
     if (id && !matching.some(line => line.id === id)) throw new Error("This variation doesn't match the current run.");
     this.pinnedLineId = id;
     if (id) this.lineIndex = this.lines.findIndex(line => line.id === id);
@@ -89,7 +89,8 @@ class OpeningPractice {
   }
   get lineCount() { return this.requiredPrefixes.size; }
   get depthComplete() { return [...this.requiredPrefixes].every(prefix => this.coverage.has(prefix)); }
-  get complete() { return this.ply === this.depth * 2; }
+  get targetDepth() { return Math.min(this.depth, Math.floor(this.targetLine.moves.length / 2)); }
+  get complete() { return Boolean(this.candidates?.length) && this.ply >= this.targetDepth * 2; }
   get whiteToMove() { return !this.complete && this.ply % 2 === 0; }
   // Use the full position rather than a ply number, to keep future branches distinct.
   get positionKey() { return JSON.stringify(Object.entries(this.board).sort()); }
@@ -115,7 +116,7 @@ class OpeningPractice {
     if (!this.whiteToMove) return {ignored: true};
     const matching = this.candidates.filter((line) => {
       const move = line.moves[this.ply];
-      return move[0] === from && move[1] === to;
+      return move && move[0] === from && move[1] === to;
     });
     if (!matching.length) {
       const failedMove = this.ply / 2 + 1;
@@ -135,7 +136,7 @@ class OpeningPractice {
     const move = this.targetLine.moves[this.ply];
     this.candidates = this.candidates.filter((line) => {
       const other = line.moves[this.ply];
-      return other[0] === move[0] && other[1] === move[1];
+      return other && other[0] === move[0] && other[1] === move[1];
     });
     this.apply(move);
     return true;

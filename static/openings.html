@@ -12,7 +12,7 @@
 </head>
 <body class="openings-page">
   <header><h1><a class="brand" href="/">Chess Board Memory</a></h1><div class="theme-controls"><label for="theme-palette">Colour</label><select id="theme-palette"><option value="classic">Classic</option><option value="purple">Purple</option><option value="bw">B&amp;W</option><option value="blue">Blue</option><option value="metal">Metal</option><option value="glass">Glass</option><option value="wood">Wood</option></select><button id="theme-toggle" type="button">Dark mode</button></div></header>
-  <nav class="page-nav" aria-label="Practice pages"><a href="/">Memory games</a><a href="/openings" aria-current="page">Openings</a></nav>
+  <nav class="page-nav" aria-label="Practice pages"><a href="/">Memory games</a><a href="/openings" aria-current="page">Openings</a><div class="opening-depth"><label for="depth">Depth</label><select id="depth" title="Maximum White moves per line"></select></div></nav>
   <main>
     <div class="workspace openings-workspace">
       <section class="card play openings-play" aria-label="Opening practice">
@@ -23,7 +23,6 @@
             <button type="button" data-mode="repeat-one" aria-label="Repeat 1" aria-pressed="false" title="Repeat 1: this exact variation"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5H8a7 7 0 0 0 0 14h6a6 6 0 0 0 6-6M14 2l4 3-4 3"/><path class="repeat-number" d="M19 17l2-1v6m-2 0h4"/></svg></button>
             <button type="button" data-mode="repeat" aria-label="Repeat" aria-pressed="false" title="Repeat: checked variations of this opening"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M17 5H8a7 7 0 0 0 0 14h8a6 6 0 0 0 6-6M14 2l4 3-4 3"/></svg></button>
           </div>
-          <div><label for="depth">White moves</label><select id="depth"></select></div>
           <button id="restart" type="button">Restart</button>
         </div>
         <div class="opening-stage">
@@ -43,7 +42,7 @@
         <h2>Openings to practise</h2>
         <p class="muted">Tick to include; click a name to play it now.</p>
         <div id="opening-tree" class="opening-tree" role="group" aria-label="Openings and variations" tabindex="0"></div>
-        <details><summary>How to practise</summary><p>Select a White piece and its destination, or drag it. Tab and Enter work too.</p><p>Click a playlist name to bring it onto the board without changing the checkboxes or mode. Shuffle chooses from checked openings. Repeat cycles through the checked variations of the opening on the board. Repeat 1 keeps that exact variation, and switches on automatically after a mistake. Choose another icon whenever you're ready to mix things up.</p><p>A mistake shows your move with a flashing red outline, then sends you back to the start. One mistake highlights the piece when you reach that position again; a second adds a ghost destination. Get the move right once and its hints clear.</p><p>Finish the enabled lines at one depth before adding a move. The London line has eight White moves; Queen’s Gambit Accepted and Declined each have five. Your menu choices, mode and depths are remembered in this browser; hints and run progress reset when you reload.</p></details>
+        <details><summary>How to practise</summary><p>Select a White piece and its destination, or drag it. Tab and Enter work too.</p><p>Click a playlist name to bring it onto the board without changing the checkboxes or mode. Shuffle chooses from checked openings. Repeat cycles through the checked variations of the opening on the board. Repeat 1 keeps that exact variation, and switches on automatically after a mistake. Choose another icon whenever you're ready to mix things up.</p><p>A mistake shows your move with a flashing red outline, then sends you back to the start. One mistake highlights the piece when you reach that position again; a second adds a ghost destination. Get the move right once and its hints clear.</p><p>The main bar sets a shared limit of up to N White moves. Shorter lines finish at their own length. Finish the enabled lines at that depth before adding a move. The London line has eight White moves; Queen’s Gambit Accepted and Declined each have five. Your menu choices, mode and shared depth are remembered in this browser; hints and run progress reset when you reload.</p></details>
       </aside>
     </div>
   </main>

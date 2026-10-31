@@ -232,9 +232,15 @@ the current position. A mistake automatically turns on Repeat 1, and briefly
 highlights its button so you can see what changed. It stays on until you choose
 another mode. The playlist scrolls within its panel as it grows.
 
-Choose how many White moves to practise. Finish the enabled lines at that depth
-before adding the next move. Shared prefixes within an opening count once until
-they branch. Shuffle's maximum depth follows the shortest enabled line.
+Use the **Depth** setting on the main bar to choose **Up to 3**, **Up to 8**, or
+another number of White moves. It's one shared limit for the whole playlist,
+kept when you switch openings or repeat modes. A shorter line finishes at its
+own length: with Up to 8 selected, the London goes to eight moves and either
+Queen's Gambit line finishes at five. The highest available setting follows the
+longest enabled line.
+
+Finish the enabled lines at that depth before adding the next move. Shared
+prefixes within an opening count once until they branch.
 
 If you play a move outside the line you're studying, your piece moves to the
 square you chose with a flashing red outline. After a short pause, the board
@@ -245,8 +251,8 @@ too. Get that move right once and its hints clear for your next attempt.
 Completing a line highlights the well-done message and next-action button.
 
 Your browser remembers the playlist, enabled variations, mode, current repeat
-variation and depths for next time. Repeat modes retain a depth for each opening,
-separate from Shuffle. Reloading clears hints, run counts and completion progress.
+variation and shared depth for next time. Reloading clears hints, run counts and
+completion progress.
 Changing the playlist starts a fresh session; changing depth retains hints for
 the current openings.
 

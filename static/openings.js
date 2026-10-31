@@ -2,8 +2,8 @@
 
 const preferences = {
   opening: "london", line: "london-d5", mode: "shuffle", selected: false,
-  enabled: OPENINGS.map(opening => opening.id), shuffleDepth: 3,
-  variations: {}, depths: {london: 3, "queens-gambit": 3}
+  enabled: OPENINGS.map(opening => opening.id), depth: 3,
+  variations: {}
 };
 for (const opening of OPENINGS) preferences.variations[opening.id] = opening.lines.map(line => line.id);
 try {
@@ -13,13 +13,14 @@ try {
   preferences.selected = saved?.selected === true;
   if (typeof saved?.line === "string") preferences.line = saved.line;
   if (Array.isArray(saved?.enabled)) preferences.enabled = OPENINGS.filter(opening => saved.enabled.includes(opening.id)).map(opening => opening.id);
-  if (Number.isInteger(saved?.shuffleDepth) && saved.shuffleDepth >= 1 && saved.shuffleDepth <= 8) preferences.shuffleDepth = saved.shuffleDepth;
+  // Migrate the previous per-mode settings once, using the depth that was active.
+  const depth = saved?.depth ?? (saved?.mode && saved.mode !== "shuffle" ? saved.depths?.[saved.opening] : saved?.shuffleDepth) ?? Number(localStorage.getItem("chess-openings-depth"));
+  const catalogueDepth = Math.max(...OPENINGS.flatMap(opening => opening.lines.map(line => line.moves.length / 2)));
+  if (Number.isInteger(depth) && depth >= 1 && depth <= catalogueDepth) preferences.depth = depth;
   for (const opening of OPENINGS) {
     const ids = saved?.variations?.[opening.id];
     if (Array.isArray(ids)) preferences.variations[opening.id] = opening.lines.filter(line => ids.includes(line.id)).map(line => line.id);
     if (!preferences.variations[opening.id].length) preferences.enabled = preferences.enabled.filter(id => id !== opening.id);
-    const depth = saved?.depths?.[opening.id] ?? (opening.id === "london" ? Number(localStorage.getItem("chess-openings-depth")) : 3);
-    if (Number.isInteger(depth) && depth >= 1 && depth <= opening.lines[0].moves.length / 2) preferences.depths[opening.id] = depth;
   }
 } catch { /* Saved settings and storage are optional. */ }
 const savedOpening = OPENINGS.find(opening => opening.id === preferences.opening);
@@ -49,10 +50,11 @@ function pool() {
   return preferences.mode === "shuffle" ? preferences.enabled : (practiceLines(preferences.opening).length ? [preferences.opening] : []);
 }
 function maxDepth() {
-  const ids = [...new Set([...pool(), ...(preferences.selected ? [preferences.opening] : [])])];
-  const lines = ids.flatMap(practiceLines).filter(line => preferences.mode !== "repeat-one" || line.id === preferences.line);
-  return lines.length ? Math.min(...lines.map(line => line.moves.length / 2)) : 1;
+  const enabled = preferences.enabled.flatMap(enabledLines);
+  const lines = enabled.length ? enabled : OPENINGS.flatMap(opening => opening.lines);
+  return Math.max(...lines.map(line => line.moves.length / 2));
 }
+
 const visibleSessions = () => pool().map(id => sessions.get(id)).filter(Boolean);
 const depthComplete = () => visibleSessions().length > 0 && visibleSessions().every(session => session.depthComplete);
 function cancelReply() {
@@ -138,27 +140,26 @@ function depthOptions() {
   $("depth").replaceChildren();
   for (let value = 1; value <= maxDepth(); value++) {
     const option = document.createElement("option");
-    option.value = value; option.textContent = value;
+    option.value = value; option.textContent = `Up to ${value}`;
     $("depth").append(option);
   }
-  $("depth").value = practice?.depth || 1;
+  $("depth").value = preferences.depth;
 }
 function rememberCurrent() {
   if (practice) {
     preferences.opening = activeOpening;
     preferences.line = practice.targetLine.id;
-    if (preferences.mode === "shuffle") preferences.shuffleDepth = practice.depth;
-    else preferences.depths[activeOpening] = practice.depth;
   }
   savePreferences();
 }
-function startSession(depth = preferences.mode === "shuffle" ? preferences.shuffleDepth : preferences.depths[preferences.opening], reset = true) {
+function startSession(depth = preferences.depth, reset = true) {
   cancelReply();
   if (!preferences.enabled.includes(preferences.opening) && !preferences.selected) preferences.mode = "shuffle";
   if (preferences.mode === "repeat-one" && !practiceLines(preferences.opening).some(line => line.id === preferences.line)) {
     preferences.line = practiceLines(preferences.opening)[0].id;
   }
   depth = Math.min(depth, maxDepth());
+  preferences.depth = depth;
   const ids = [...new Set([...pool(), ...(preferences.selected ? [preferences.opening] : [])])];
   sessions = new Map(ids.map(id => {
     const session = reset ? null : sessions.get(id);
@@ -176,11 +177,11 @@ function startSession(depth = preferences.mode === "shuffle" ? preferences.shuff
 }
 function selectPlaylist(id, lineId = null) {
   cancelReply();
-  const depth = practice?.depth || preferences.shuffleDepth;
+  const depth = preferences.depth;
   preferences.opening = id;
   preferences.line = lineId || enabledLines(id)[0]?.id || findOpening(id).lines[0].id;
   preferences.selected = true;
-  const session = new OpeningPractice(Math.min(depth, maxDepth()), practiceLines(id));
+  const session = new OpeningPractice(depth, practiceLines(id));
   session.lineIndex = session.lines.findIndex(line => line.id === preferences.line);
   if (preferences.mode === "repeat-one") session.pinLine(preferences.line);
   sessions.set(id, session);
@@ -200,7 +201,6 @@ function setMode(mode) {
   preferences.selected = true;
   // Pin before advancing or restarting, including while Black's reply is pending.
   practice.pinLine(mode === "repeat-one" ? preferences.line : null);
-  if (practice.depth > maxDepth()) { startSession(maxDepth()); return; }
   for (const id of pool()) {
     if (!sessions.has(id)) sessions.set(id, new OpeningPractice(practice.depth, practiceLines(id)));
     else if (sessions.get(id).depth !== practice.depth) sessions.get(id).setDepth(practice.depth);
@@ -264,14 +264,14 @@ function render(message = "") {
   $("depth").disabled = !available;
   $("restart").disabled = !available;
   $("again").hidden = !practice?.complete;
-  $("deeper").hidden = !practice?.complete || !depthComplete() || practice.depth === maxDepth();
+  $("deeper").hidden = !practice?.complete || !depthComplete() || preferences.depth === maxDepth();
   $("instruction").textContent = available ? findOpening(activeOpening).name : "Choose an opening";
   $("phase").textContent = wrongMove ? "OUTSIDE THIS LINE" : !available ? "READY" : practice.complete ? (depthComplete() ? "DEPTH COMPLETE" : "LINE COMPLETE") : practice.whiteToMove ? "YOUR TURN · WHITE" : "BLACK'S REPLY";
-  $("badge").textContent = available ? `${Math.floor(practice.ply / 2)} / ${practice.depth}` : "White";
+  $("badge").textContent = available ? `${Math.floor(practice.ply / 2)} / ${practice.targetDepth}` : "White";
   const targets = visibleSessions();
   const total = targets.reduce((n, session) => n + session.lineCount, 0);
   const covered = targets.reduce((n, session) => n + [...session.requiredPrefixes].filter(prefix => session.coverage.has(prefix)).length, 0);
-  $("coverage").textContent = available ? `${covered} / ${total} lines at this depth` : "No openings selected";
+  $("coverage").textContent = available ? `${covered} / ${total} lines · up to ${preferences.depth} White moves` : "No openings selected";
   $("completed").textContent = [...sessions.values()].reduce((n, session) => n + session.completed, 0);
   $("mistakes").textContent = [...sessions.values()].reduce((n, session) => n + session.restarts, 0);
   const modeText = {shuffle: "Shuffle · checked openings", repeat: "Repeat · current opening", "repeat-one": "Repeat 1 · current variation"};
@@ -352,7 +352,7 @@ $("again").addEventListener("click", () => {
   }
   rememberCurrent(); render();
 });
-$("deeper").addEventListener("click", () => startSession(practice.depth + 1, false));
+$("deeper").addEventListener("click", () => startSession(preferences.depth + 1, false));
 $("depth").addEventListener("change", () => startSession(Number($("depth").value), false));
 for (const button of document.querySelectorAll("[data-mode]")) button.addEventListener("click", () => setMode(button.dataset.mode));
 document.addEventListener("keydown", event => {

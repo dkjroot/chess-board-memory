@@ -67,6 +67,37 @@ const {LONDON_LINES, QUEENS_GAMBIT_LINES} = require('../static/opening-practice.
     assert.equal(await square('f1').getAttribute('aria-label'),'F1, White rook');
     assert.equal(await square('g8').getAttribute('aria-label'),'G8, Black king');
     await page.locator('#again').click();
+    // One global limit survives opening changes, all modes and reloads.
+    assert.equal(await page.locator('.page-nav #depth').count(),1);
+    assert.equal(await page.locator('#depth option:last-child').textContent(),'Up to 8');
+    await mode('shuffle').click();
+    assert.equal(await page.locator('#depth').inputValue(),'8');
+    await title('qg-accepted').click();
+    for (const id of ['repeat','repeat-one','shuffle']) {
+      await mode(id).click();
+      assert.equal(await page.locator('#depth').inputValue(),'8');
+      assert.equal(await page.locator('#depth option:last-child').getAttribute('value'),'8');
+    }
+    await finish(QUEENS_GAMBIT_LINES[0].moves,0,5);
+    assert.equal(await page.locator('#phase').textContent(),'LINE COMPLETE');
+    assert.equal(await page.locator('#badge').textContent(),'5 / 5');
+    assert.equal(await page.locator('#depth').inputValue(),'8','Short line completion keeps the shared limit');
+    await page.reload();
+    assert.equal(await page.locator('#depth').inputValue(),'8');
+    await title('london').click();
+    await finish(LONDON_LINES[0].moves,0,8);
+    assert.equal(await page.locator('#badge').textContent(),'8 / 8');
+    await page.locator('#again').click();
+    // Only playlist changes alter the available ceiling; re-enabling doesn't raise the chosen depth.
+    await checkbox('london').uncheck();
+    assert.equal(await page.locator('#depth').inputValue(),'5');
+    assert.equal(await page.locator('#depth option:last-child').getAttribute('value'),'5');
+    await checkbox('london').check();
+    assert.equal(await page.locator('#depth').inputValue(),'5');
+    assert.equal(await page.locator('#depth option:last-child').getAttribute('value'),'8');
+    await page.locator('#depth').selectOption('8');
+    await title('london').click();
+    await mode('repeat-one').click();
     await page.locator('#theme-toggle').click();
     for(const viewport of [{width:320,height:568},{width:768,height:600},{width:1280,height:720},{width:844,height:390}]) {
       await page.setViewportSize(viewport);

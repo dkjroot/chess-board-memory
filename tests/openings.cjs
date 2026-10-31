@@ -102,3 +102,31 @@ for (let i=0; i<6; i+=2) { pinned.play(...QUEENS_GAMBIT_LINES[1].moves[i]); pinn
 pinned.restart();
 assert.equal(pinned.targetLine.id, 'qg-accepted');
 console.log('Repeat 1 checks passed: mid-run pinning, exact-line repetition, coverage and unpinning.');
+
+// A shared upper limit finishes shorter lines naturally, including uneven siblings.
+const upToEight = new OpeningPractice(8, QUEENS_GAMBIT_LINES);
+assert.equal(upToEight.depth, 8);
+assert.equal(upToEight.targetDepth, 5);
+for (const variant of QUEENS_GAMBIT_LINES) {
+  for (let i=0;i<variant.moves.length;i+=2) {upToEight.play(...variant.moves[i]);upToEight.reply();}
+  assert.equal(upToEight.complete,true);
+  assert.equal(upToEight.ply,10);
+  assert.equal(upToEight.reply(),false);
+  assert.equal(upToEight.play('a2','a3').ignored,true);
+  if (variant === QUEENS_GAMBIT_LINES[0]) upToEight.restart();
+}
+assert.equal(upToEight.depthComplete,true);
+const shortLondon = {id:'short-london',moves:line.slice(0,6)};
+const uneven = new OpeningPractice(8,[shortLondon,LONDON_LINES[0]]);
+assert.equal(uneven.maxDepth,8);
+for (let i=0;i<6;i+=2) {uneven.play(...line[i]);uneven.reply();}
+assert.equal(uneven.complete,true);
+assert.equal(uneven.targetDepth,3);
+assert.equal(uneven.depthComplete,false);
+uneven.restart();
+for (let i=0;i<16;i+=2) {uneven.play(...line[i]);uneven.reply();}
+uneven.pinLine(); // Ended shorter candidates cannot cause an out-of-range lookup.
+assert.equal(uneven.complete,true);
+assert.equal(uneven.targetDepth,8);
+assert.equal(uneven.depthComplete,true);
+console.log('Up-to-depth checks passed: shorter lines, unequal lengths, natural completion and coverage.');
